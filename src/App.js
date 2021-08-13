@@ -1,19 +1,51 @@
 import React from 'react';
 import './index.css';
 
+// class Priority extends React.Component {
+//   state={
+//     priority: 5
+//   }
+//   handleDecrease = () => {
+//     this.setState({priority: this.state.priority - 1});
+//   }
+//   handleIncrease = () => {
+//     this.setState({priority: this.state.priority + 1});
+//   }
+//   render(){
+//     return(
+//       <div className='priority'>
+//         <button style={{color: 'green'}} onClick={this.handleDecrease}>↓</button>
+//         <h3 className='priority-num'>{this.state.priority}</h3>
+//         <button style={{color: 'green'}} onClick={this.handleIncrease}>↑</button>
+//       </div>
+//     )
+//   }
+// }
+ const Sort = (props) => {
+     return(
+       <button onClick={props.handleSort}>Sort</button>
+     )
+ }
+
 const Item = (props) => {
     return(
       <li> 
         {props.item.value}
         <button style={{color: 'green', margin: '0 .6rem'}} onClick={() => props.handleToggle(props.item.id)}>{props.item.complete ? "Yes": "No"}</button>
         <button style={{color: 'green', margin: '0 .6rem'}} onClick={() => props.handleRemove(props.item.id)}>Remove</button>
+        {/* <Priority handleDecrease={props.handleDecrease} handleIncrease={props.handleIncrease}/> */}
+        <div className='priority'>
+        <button style={{color: 'green'}} onClick={() => props.handleDecrease(props.id)}>↓</button>
+        <h3 className='priority-num'>{props.text}</h3>
+        {/* <button style={{color: 'green'}} onClick={props.handleIncrease}>↑</button> */}
+      </div>
       </li>
     )
 }
 const List = (props) => {
    return(
      <ul>
-       {props.list.map(item => <Item key={item} item={item} handleToggle={props.handleToggle} handleRemove={props.handleRemove}/>)}
+       {props.list.map(item => <Item key={item} item={item} handleToggle={props.handleToggle} handleRemove={props.handleRemove} handleDecrease={props.handleDecrease}  text={props.priority}/>)}
      </ul>
    )
 }
@@ -22,7 +54,6 @@ const Search = (props) => {
       <input className='input' type='text' value={props.searchInput} onChange={props.handleSearch}/>
     )
 }
-
 class Form extends React.Component {
   state={
     inputValue: ''
@@ -59,7 +90,9 @@ function RandomNum() {
 class App extends React.Component {
   state={
     list: [],
-    searchInput: ''
+    searchInput: '',
+    priority: 5,
+    sorted: null
   }
   handleSubmit = (value) => {
     const item = {
@@ -86,6 +119,18 @@ class App extends React.Component {
   handleSearch = (e) => {
       this.setState({searchInput: e.target.value})
   }
+  handleDecrease = (id) => {
+    const decrease = this.state.list.map(element => {
+      if(id === element.id) {
+          this.setState({priority: this.state.priority - 1})
+      }
+      return element;
+    })
+    this.setState({list: decrease});
+  }
+  handleSort = () => {
+    
+  }
 
   render() {
     const searchItem = this.state.list.filter(element => element.value.includes(this.state.searchInput));
@@ -96,9 +141,12 @@ class App extends React.Component {
         <Search handleSearch={this.handleSearch}/>
         <List 
          list={searchItem} 
+         priority={this.state.priority}
          handleToggle={this.handleToggle}
          handleRemove={this.handleRemove}
+         handleDecrease={this.handleDecrease}
         />
+        <Sort handleSort={this.handleSort} />
       </div>
     )
   }
