@@ -1,0 +1,16 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    margin: 2rem auto;
+    text-align: center;
+    width: 800px;
+}
+.input {
+    border: 1px solid green;
+}
+option{
+    color: green;
+}
